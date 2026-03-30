@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Mix Web | PDV de Alta Performance</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="pdv-container">
+        <main class="venda-area">
+            <header>
+                <h1>VISUAL MIX <span>WEB</span></h1>
+                <div id="status-caixa" class="status-online">CAIXA ABERTO</div>
+            </header>
+
+            <div class="input-group">
+                <label for="codigo">Código do Produto (EAN)</label>
+                <input type="number" id="codigo-input" placeholder="000000000000" autofocus>
+            </div>
+
+            <div class="produto-detalhe">
+                <h2 id="nome-produto">Aguardando Produto...</h2>
+                <div class="precos">
+                    <span>Unitário: <strong id="preco-unitario">R$ 0,00</strong></span>
+                </div>
+            </div>
+
+            <div class="total-venda">
+                <span>TOTAL</span>
+                <h1 id="total-geral">R$ 0,00</h1>
+            </div>
+        </main>
+
+        <aside class="cupom-fiscal">
+            <h3>Lista de Itens</h3>
+            <ul id="lista-itens">
+                </ul>
+            <div class="atalhos">
+                <p><strong>F10</strong> Finalizar | <strong>F8</strong> Cancelar Item</p>
+            </div>
+        </aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
