@@ -3,44 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Mix Web | PDV de Alta Performance</title>
+    <title>ERP tiny's - ERP Retaguarda</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="pdv-container">
-        <main class="venda-area">
-            <header>
-                <h1>VISUAL MIX <span>WEB</span></h1>
-                <div id="status-caixa" class="status-online">CAIXA ABERTO</div>
-            </header>
 
-            <div class="input-group">
-                <label for="codigo">Código do Produto (EAN)</label>
-                <input type="number" id="codigo-input" placeholder="000000000000" autofocus>
+    <nav>
+        <div class="logo">
+            <h2><i class="fas fa-boxes"></i> ERPSystem</h2>
+        </div>
+        <ul>
+            <li onclick="showSection('dashboard')">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </li>
+            <li onclick="showSection('produtos')">
+                <i class="fas fa-tag"></i> Cadastro de Produtos
+            </li>
+            <li onclick="showSection('estoque')">
+                <i class="fas fa-warehouse"></i> Controle de Estoque
+            </li>
+            <li onclick="showSection('vendas')">
+                <i class="fas fa-file-invoice-dollar"></i> Relatórios de Vendas
+            </li>
+        </ul>
+        <div class="nav-footer">
+            <p>v1.0.0 - Modo Local</p>
+        </div>
+    </nav>
+
+    <main id="content">
+        
+        <section id="dashboard">
+            <h1><i class="fas fa-home"></i> Painel de Controle</h1>
+            <div class="card-container" style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <div class="card" style="flex: 1; background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 4px solid #3498db;">
+                    <h3>Patrimônio em Estoque</h3>
+                    <p id="dashPatrimonio" style="font-size: 1.8rem; font-weight: bold; color: #2c3e50;">R$ 0,00</p>
+                </div>
+                <div class="card" style="flex: 1; background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 4px solid #e74c3c;">
+                    <h3>Alertas de Reposição</h3>
+                    <p id="dashAlertas" style="font-size: 1.8rem; font-weight: bold; color: #e74c3c;">0</p>
+                </div>
+                <div class="card" style="flex: 1; background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 4px solid #27ae60;">
+                    <h3>Total de Itens</h3>
+                    <p id="dashTotalItens" style="font-size: 1.8rem; font-weight: bold; color: #27ae60;">0</p>
+                </div>
             </div>
+        </section>
 
-            <div class="produto-detalhe">
-                <h2 id="nome-produto">Aguardando Produto...</h2>
-                <div class="precos">
-                    <span>Unitário: <strong id="preco-unitario">R$ 0,00</strong></span>
+        <section id="produtos" style="display:none;">
+            <h1><i class="fas fa-edit"></i> Gestão de Inventário</h1>
+            
+            <div class="card" style="margin-bottom: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <input type="hidden" id="pId"> 
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label>Descrição do Produto</label>
+                        <input type="text" id="pNome" placeholder="Ex: Teclado Mecânico RGB" style="width:100%; padding: 10px; margin-top:5px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Custo (R$)</label>
+                        <input type="number" id="pCusto" placeholder="0.00" step="0.01" style="width:100%; padding: 10px; margin-top:5px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Venda (R$)</label>
+                        <input type="number" id="pVenda" placeholder="0.00" step="0.01" style="width:100%; padding: 10px; margin-top:5px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Qtd. Inicial</label>
+                        <input type="number" id="pEstoque" placeholder="0" style="width:100%; padding: 10px; margin-top:5px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <button id="btnSalvar" onclick="salvarProduto()" style="background: #27ae60; color:white; padding: 12px 25px; border:none; border-radius:4px; cursor:pointer; font-weight: bold;">
+                            <i class="fas fa-save"></i> Salvar Produto
+                        </button>
+                        <button id="btnCancelar" onclick="limparFormulario()" style="display:none; background: #7f8c8d; color:white; padding: 12px 25px; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">
+                            Cancelar
+                        </button>
+                    </div>
+
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 14px; color: #aaa;"></i>
+                        <input type="text" id="pBusca" placeholder="Pesquisar produto ou ID..." onkeyup="filtrarProdutos(this.value)" style="padding: 12px 12px 12px 35px; width: 350px; border: 2px solid #3498db; border-radius: 25px; outline: none;">
+                    </div>
                 </div>
             </div>
 
-            <div class="total-venda">
-                <span>TOTAL</span>
-                <h1 id="total-geral">R$ 0,00</h1>
-            </div>
-        </main>
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background: #2c3e50; color: white; text-align: center;">
+                        <th style="padding: 15px;">Cód. ID</th>
+                        <th>Descrição</th>
+                        <th>Preço Custo</th>
+                        <th>Preço Venda</th>
+                        <th>Estoque Atual</th>
+                        <th>Margem Lucro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaProdutos">
+                    </tbody>
+            </table>
+        </section>
 
-        <aside class="cupom-fiscal">
-            <h3>Lista de Itens</h3>
-            <ul id="lista-itens">
-                </ul>
-            <div class="atalhos">
-                <p><strong>F10</strong> Finalizar | <strong>F8</strong> Cancelar Item</p>
+        <section id="estoque" style="display:none;">
+    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1><i class="fas fa-warehouse"></i> Controle de Estoque</h1>
+        <div class="actions">
+            <button onclick="imprimirRelatorio()" style="background: #34495e; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;">
+                <i class="fas fa-print"></i> Imprimir Relatório
+            </button>
             </div>
-        </aside>
     </div>
+              <div id="estoque-content"></div>
+         </section>
+
+        <section id="vendas" style="display:none;">
+            <h1><i class="fas fa-history"></i> Relatório de Vendas</h1>
+            <div class="card" style="background:#fff; padding:20px; border-radius:8px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Histórico Consolidado</h3>
+                    <h2 style="color: #27ae60;">Total Faturado: <span id="faturamentoTotal">R$ 0,00</span></h2>
+                </div>
+                <p style="color: #666; margin-top: 10px;">As vendas listadas aqui são originadas do módulo de PDV (Frente de Caixa).</p>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white;">
+                <thead>
+                    <tr style="background: #2c3e50; color: white;">
+                        <th style="padding: 12px;">ID Venda</th>
+                        <th>Data/Hora</th>
+                        <th>Itens</th>
+                        <th>Valor Total</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="listaVendasRealizadas">
+                    </tbody>
+            </table>
+        </section>
+
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
