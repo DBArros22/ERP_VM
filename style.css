@@ -1,73 +1,166 @@
 :root {
-    --primary: #2c3e50;
-    --secondary: #34495e;
-    --accent: #3498db;
-    --success: #27ae60;
-    --text: #ecf0f1;
-    --bg: #f4f7f6;
+    /* Paleta de Cores Profissional */
+    --primary-dark: #1b3022;    /* Verde Floresta Escuro (Formal) */
+    --primary-medium: #2d5a27;  /* Verde Médio para botões */
+    --accent-green: #4caf50;    /* Verde para Sucesso/Destaque */
+    --bg-light: #f4f7f5;        /* Fundo cinza esverdeado muito claro */
+    --text-main: #2c3e50;       /* Texto principal */
+    --white: #ffffff;
+    --border-color: #dcdcdc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
     display: flex;
-    height: 100vh;
-    background-color: var(--bg);
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    min-height: 100vh;
 }
 
-/* Sidebar */
+/* --- NAVEGAÇÃO LATERAL --- */
 nav {
     width: 250px;
-    background: var(--primary);
-    color: var(--text);
-    padding: 20px;
+    background-color: var(--primary-dark);
+    color: var(--white);
+    padding: 20px 0;
+    position: fixed;
+    height: 100vh;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
 }
 
-nav h2 { text-align: center; color: var(--accent); }
+nav h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+    color: var(--accent-green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
 
-nav ul { list-style: none; padding: 0; }
+nav ul {
+    list-style: none;
+}
 
 nav ul li {
-    padding: 15px;
+    padding: 15px 25px;
     cursor: pointer;
-    border-bottom: 1px solid var(--secondary);
+    transition: 0.3s;
+    border-left: 4px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-nav ul li:hover { background: var(--accent); }
+nav ul li:hover {
+    background-color: rgba(255,255,255,0.1);
+    border-left: 4px solid var(--accent-green);
+}
 
-/* Main Content */
+/* --- CONTEÚDO PRINCIPAL --- */
 main {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
+    margin-left: 250px; /* Largura da nav */
+    padding: 30px;
+    width: calc(100% - 250px);
 }
 
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+h1 {
+    margin-bottom: 25px;
+    font-weight: 300;
+    color: var(--primary-dark);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
 }
 
+/* --- CARDS --- */
 .card {
-    background: white;
-    padding: 20px;
+    background: var(--white);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-/* Formulários e Tabelas */
+.card h3 {
+    color: var(--primary-medium);
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* --- FORMULÁRIOS E INPUTS --- */
+input {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: var(--primary-medium);
+    box-shadow: 0 0 5px rgba(45, 90, 39, 0.2);
+}
+
+/* --- TABELAS --- */
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+thead tr {
+    background-color: var(--primary-dark) !important; /* Força o verde escuro no topo */
+    color: var(--white);
 }
 
 th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
 }
 
-th { background: var(--primary); color: white; }
+tbody tr:hover {
+    background-color: #f9fdfa;
+}
+
+/* --- BOTÕES --- */
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+#btnSalvar {
+    background-color: var(--primary-medium);
+    color: white;
+}
+
+#btnSalvar:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Estilo para botões de ação na tabela (editar/excluir) */
+td button {
+    background: none;
+    color: var(--primary-medium);
+    font-size: 1.1rem;
+    padding: 5px;
+}
+
+td button:hover {
+    color: var(--primary-dark);
+    transform: scale(1.1);
+}
