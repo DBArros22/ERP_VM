@@ -1,4 +1,3 @@
-// 1. Estado Global
 let produtos = JSON.parse(localStorage.getItem('erp_produtos')) || [];
 let vendas = JSON.parse(localStorage.getItem('erp_vendas')) || []; // Reservado para integração PDV
 
@@ -19,6 +18,7 @@ function showSection(id) {
 // 3. Gestão de Produtos (CRUD)
 function salvarProduto() {
     const id = document.getElementById('pId').value;
+    const codBarras = document.getElementById('pCodBarras').value.trim(); // NOVO
     const nome = document.getElementById('pNome').value.trim();
     const custo = parseFloat(document.getElementById('pCusto').value) || 0;
     const venda = parseFloat(document.getElementById('pVenda').value) || 0;
@@ -28,13 +28,84 @@ function salvarProduto() {
 
     if (id) {
         const index = produtos.findIndex(p => p.id == id);
-        produtos[index] = { id: parseInt(id), nome, custo, venda, estoque };
+        // Mantemos o ID original e atualizamos o restante
+        produtos[index] = { id: parseInt(id), codBarras, nome, custo, venda, estoque };
     } else {
-        produtos.push({ id: Date.now(), nome, custo, venda, estoque });
+        // Novo Produto
+        produtos.push({ 
+            id: Date.now(), 
+            codBarras: codBarras || "S/N", // Se não digitar, salva Sem Número
+            nome, 
+            custo, 
+            venda, 
+            estoque 
+        });
     }
 
     sincronizar();
     limparFormulario();
+}
+
+// Atualize a renderização da tabela para mostrar o EAN
+function renderizarTabelaProdutos(lista) {
+    const tbody = document.getElementById('listaProdutos');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    lista.forEach(p => {
+        const margem = p.custo > 0 ? (((p.venda - p.custo) / p.custo) * 100).toFixed(1) : 0;
+        tbody.innerHTML += `
+            <tr style="border-bottom: 1px solid #ddd; text-align: center;">
+                <td style="padding: 10px; font-size: 0.85em; color: #666;">${p.codBarras}</td>
+                <td style="text-align: left;">${p.nome}</td>
+                <td>R$ ${p.custo.toFixed(2)}</td>
+                <td>R$ ${p.venda.toFixed(2)}</td>
+                <td style="font-weight: bold; color: ${p.estoque < 5 ? '#e74c3c' : '#27ae60'}">${p.estoque}</td>
+                <td>${margem}%</td>
+                <td>
+                    <button onclick="editarProduto(${p.id})">✏️</button>
+                    <button onclick="excluirProduto(${p.id})">🗑️</button>
+                </td>
+            </tr>`;
+    });
+}
+
+// Atualize o limparFormulario
+function limparFormulario() {
+    document.getElementById('pId').value = '';
+    document.getElementById('pCodBarras').value = ''; // NOVO
+    document.getElementById('pNome').value = '';
+    document.getElementById('pCusto').value = '';
+    document.getElementById('pVenda').value = '';
+    document.getElementById('pEstoque').value = '';
+    document.getElementById('btnSalvar').innerText = "Salvar Produto";
+    document.getElementById('btnCancelar').style.display = 'none';
+}
+
+// Atualize o editarProduto
+function editarProduto(id) {
+    const p = produtos.find(p => p.id == id);
+    if (p) {
+        document.getElementById('pId').value = p.id;
+        document.getElementById('pCodBarras').value = p.codBarras || ''; // NOVO
+        document.getElementById('pNome').value = p.nome;
+        document.getElementById('pCusto').value = p.custo;
+        document.getElementById('pVenda').value = p.venda;
+        document.getElementById('pEstoque').value = p.estoque;
+        document.getElementById('btnSalvar').innerText = "Atualizar Produto";
+        document.getElementById('btnCancelar').style.display = 'inline-block';
+        window.scrollTo(0,0);
+    }
+}
+
+// Atualize o filtro para buscar também pelo Código de Barras
+function filtrarProdutos(termo) {
+    const filtrados = produtos.filter(p => 
+        p.nome.toLowerCase().includes(termo.toLowerCase()) || 
+        (p.codBarras && p.codBarras.includes(termo)) ||
+        p.id.toString().includes(termo)
+    );
+    renderizarTabelaProdutos(filtrados);
 }
 
 function renderizarTabelaProdutos(lista) {
