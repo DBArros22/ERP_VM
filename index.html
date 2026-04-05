@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
     <nav>
         <div class="logo">
             <h2><i class="fas fa-boxes"></i> ERPSystem</h2>
@@ -103,7 +102,56 @@
          </section>
 
         <section id="vendas" style="display:none;">
-            <h1><i class="fas fa-history"></i> Relatório de Vendas</h1>
+    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1><i class="fas fa-history"></i> Relatório de Vendas</h1>
+        
+        <button onclick="simularVendaPDV()" style="background: #d35400; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+            <i class="fas fa-flask"></i> Simular Venda (PDV)
+        </button>
+    </div>
+
+    <div class="card" style="display: flex; gap: 15px; align-items: flex-end; background: #fff; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd;">
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="font-size: 12px; font-weight: bold; color: var(--primary-dark);">Data Início:</label>
+            <input type="date" id="filtroDataInicio" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="font-size: 12px; font-weight: bold; color: var(--primary-dark);">Data Fim:</label>
+            <input type="date" id="filtroDataFim" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1;">
+            <label style="font-size: 12px; font-weight: bold; color: var(--primary-dark);">Buscar por ID do Cupom:</label>
+            <input type="text" id="buscaVendaId" placeholder="Ex: 123456" onkeyup="aplicarFiltrosVendas()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <button onclick="aplicarFiltrosVendas()" style="background: var(--primary-medium); color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Filtrar</button>
+        <button onclick="limparFiltrosVendas()" style="background: #7f8c8d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Limpar</button>
+    </div>
+
+    <div class="card" style="background:#fff; padding:20px; border-radius:8px; margin-bottom: 20px; border-left: 5px solid var(--primary-medium);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Faturamento no Período</h3>
+            <h2 id="faturamentoTotal" style="color: var(--primary-dark); text-align: right;">R$ 0,00</h2>
+        </div>
+    </div>
+    
+    <table style="width: 100%; border-collapse: collapse; background: white;">
+        <thead>
+            <tr style="background: var(--primary-dark); color: white;">
+                <th style="padding: 12px;">ID Venda</th>
+                <th>Data/Hora</th>
+                <th>Qtd. Itens</th>
+                <th>Valor Total</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="listaVendasRealizadas"></tbody>
+    </table>
+</section>
+
+            <button onclick="simularVendaPDV()" style="background: #e67e22; color: white; margin-bottom: 15px;">
+    <i class="fas fa-flask"></i> Simular Venda de Teste (PDV)
+</button>
+
             <div class="card" style="background:#fff; padding:20px; border-radius:8px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h3>Histórico Consolidado</h3>
@@ -128,6 +176,31 @@
         </section>
 
     </main>
+
+    <div id="modalVenda" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); overflow-y: auto;">
+    <div id="documentoImpressao" style="background:white; width:400px; margin:30px auto; padding:20px; font-family:'Courier New', Courier, monospace; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid #ccc;">
+        
+        <div id="conteudoCupom">
+            </div>
+
+        <div style="margin-top:20px; display:flex; gap:10px;" class="no-print">
+            <button onclick="window.print()" style="flex:1; background:var(--primary-medium); color:white; padding:10px; cursor:pointer;">Imprimir</button>
+            <button onclick="fecharModal()" style="flex:1; background:#7f8c8d; color:white; padding:10px; border:none; cursor:pointer;">
+    Fechar
+</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Regra para esconder os botões na hora de imprimir o papel */
+    @media print {
+        body * { visibility: hidden; }
+        #documentoImpressao, #documentoImpressao * { visibility: visible; }
+        #documentoImpressao { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
+        .no-print { display: none !important; }
+    }
+</style>
 
     <script src="script.js"></script>
 </body>
